@@ -806,7 +806,7 @@ def _rasterization(
         Compared to rasterization(), this function does not support some arguments such as
         `packed`, `sparse_grad` and `absgrad`.
     """
-    from gsplat.cuda._torch_impl import (
+    from gsplat_original.cuda._torch_impl import (
         _fully_fused_projection,
         _quat_scale_to_covar_preci,
         _rasterize_to_pixels,

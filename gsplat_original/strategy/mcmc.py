@@ -32,7 +32,7 @@ class MCMCStrategy(Strategy):
 
     Examples:
 
-        >>> from gsplat import MCMCStrategy, rasterization
+        >>> from gsplat_original import MCMCStrategy, rasterization
         >>> params: Dict[str, torch.nn.Parameter] | torch.nn.ParameterDict = ...
         >>> optimizers: Dict[str, torch.optim.Optimizer] = ...
         >>> strategy = MCMCStrategy()
