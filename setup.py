@@ -8,8 +8,9 @@ import sys
 from setuptools import find_packages, setup
 
 __version__ = None
-exec(open("gsplat/version.py", "r").read())
+exec(open("gsplat_original/version.py", "r").read())
 
+# TODO: 如果你有自己的 fork 仓库地址，改成你的地址
 URL = "https://github.com/nerfstudio-project/gsplat"
 
 BUILD_NO_CUDA = os.getenv("BUILD_NO_CUDA", "0") == "1"
@@ -34,7 +35,7 @@ def get_extensions():
     from torch.__config__ import parallel_info
     from torch.utils.cpp_extension import CUDAExtension
 
-    extensions_dir = osp.join("gsplat", "cuda")
+    extensions_dir = osp.join("gsplat_original", "cuda")
     sources = glob.glob(osp.join(extensions_dir, "csrc", "*.cu")) + glob.glob(
         osp.join(extensions_dir, "csrc", "*.cpp")
     )
@@ -44,7 +45,7 @@ def get_extensions():
     define_macros = []
 
     extra_compile_args = {"cxx": ["-O3"]}
-    if not os.name == "nt":  # Not on Windows:
+    if not os.name == "nt":  # Not on Windows
         extra_compile_args["cxx"] += ["-Wno-sign-compare"]
     extra_link_args = [] if WITH_SYMBOLS else ["-s"]
 
@@ -80,7 +81,7 @@ def get_extensions():
     else:
         nvcc_flags += ["--expt-relaxed-constexpr"]
 
-    # GLM/Torch has spammy and very annoyingly verbose warnings that this suppresses
+    # GLM/Torch noisy warnings
     nvcc_flags += ["-diag-suppress", "20012,186"]
     extra_compile_args["nvcc"] = nvcc_flags
     if sys.platform == "win32":
@@ -90,11 +91,11 @@ def get_extensions():
         ]
 
     current_dir = pathlib.Path(__file__).parent.resolve()
-    glm_path = osp.join(current_dir, "gsplat", "cuda", "csrc", "third_party", "glm")
-    include_dirs = [glm_path, osp.join(current_dir, "gsplat", "cuda", "include")]
+    glm_path = osp.join(current_dir, "gsplat_original", "cuda", "csrc", "third_party", "glm")
+    include_dirs = [glm_path, osp.join(current_dir, "gsplat_original", "cuda", "include")]
 
     extension = CUDAExtension(
-        "gsplat.csrc",
+        "gsplat_original.csrc",  # <= 扩展模块路径改名
         sources,
         include_dirs=include_dirs,
         define_macros=define_macros,
@@ -106,12 +107,12 @@ def get_extensions():
 
 
 setup(
-    name="gsplat",
+    name="gsplat_original",  
     version=__version__,
-    description=" Python package for differentiable rasterization of gaussians",
-    keywords="gaussian, splatting, cuda",
+    description="Python package for differentiable rasterization of gaussians (original fork)",
+    keywords="gaussian, splatting, cuda, gsplat_original",
     url=URL,
-    download_url=f"{URL}/archive/gsplat-{__version__}.tar.gz",
+    download_url=f"{URL}/archive/gsplat_original-{__version__}.tar.gz",
     python_requires=">=3.7",
     install_requires=[
         "ninja",
@@ -120,9 +121,9 @@ setup(
         "rich>=12",
         "torch",
         "typing_extensions; python_version<'3.8'",
+
     ],
     extras_require={
-        # dev dependencies. Install them by `pip install gsplat[dev]`
         "dev": [
             "black[jupyter]==22.3.0",
             "isort==5.10.1",
@@ -137,8 +138,7 @@ setup(
     },
     ext_modules=get_extensions() if not BUILD_NO_CUDA else [],
     cmdclass={"build_ext": get_ext()} if not BUILD_NO_CUDA else {},
-    packages=find_packages(),
-    # https://github.com/pypa/setuptools/issues/1461#issuecomment-954725244
+    packages=find_packages(include=["gsplat_original", "gsplat_original.*"]),
     include_package_data=True,
 )
 
