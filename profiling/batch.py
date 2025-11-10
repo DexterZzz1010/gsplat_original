@@ -11,9 +11,9 @@ import time
 import torch
 from typing_extensions import Callable, Literal
 
-from gsplat._helper import load_test_data
-from gsplat.distributed import cli
-from gsplat.rendering import rasterization
+from gsplat_original._helper import load_test_data
+from gsplat_original.distributed import cli
+from gsplat_original.rendering import rasterization
 
 RESOLUTIONS = {
     "360p": (640, 360),

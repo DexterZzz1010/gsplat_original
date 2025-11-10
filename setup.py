@@ -8,7 +8,7 @@ import sys
 from setuptools import find_packages, setup
 
 __version__ = None
-exec(open("gsplat/version.py", "r").read())
+exec(open("gsplat_original/version.py", "r").read())
 
 URL = "https://github.com/nerfstudio-project/gsplat"
 
@@ -34,7 +34,7 @@ def get_extensions():
     from torch.__config__ import parallel_info
     from torch.utils.cpp_extension import CUDAExtension
 
-    extensions_dir = osp.join("gsplat", "cuda")
+    extensions_dir = osp.join("gsplat_original", "cuda")
     sources = glob.glob(osp.join(extensions_dir, "csrc", "*.cu")) + glob.glob(
         osp.join(extensions_dir, "csrc", "*.cpp")
     )
@@ -87,11 +87,11 @@ def get_extensions():
         extra_compile_args["nvcc"] += ["-DWIN32_LEAN_AND_MEAN"]
 
     current_dir = pathlib.Path(__file__).parent.resolve()
-    glm_path = osp.join(current_dir, "gsplat", "cuda", "csrc", "third_party", "glm")
-    include_dirs = [glm_path, osp.join(current_dir, "gsplat", "cuda", "include")]
+    glm_path = osp.join(current_dir, "gsplat_original", "cuda", "csrc", "third_party", "glm")
+    include_dirs = [glm_path, osp.join(current_dir, "gsplat_original", "cuda", "include")]
 
     extension = CUDAExtension(
-        "gsplat.csrc",
+        "gsplat_original.csrc",
         sources,
         include_dirs=include_dirs,
         define_macros=define_macros,
@@ -103,12 +103,12 @@ def get_extensions():
 
 
 setup(
-    name="gsplat",
+    name="gsplat_original",
     version=__version__,
     description=" Python package for differentiable rasterization of gaussians",
     keywords="gaussian, splatting, cuda",
     url=URL,
-    download_url=f"{URL}/archive/gsplat-{__version__}.tar.gz",
+    download_url=f"{URL}/archive/gsplat_original-{__version__}.tar.gz",
     python_requires=">=3.7",
     install_requires=[
         "ninja",
